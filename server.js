@@ -45,6 +45,14 @@ app.get('/api/shorturl/:short_url', async(req, res) => {
 })
 
 app.post('/api/shorturl/new', async(req, res) => {
+  let urlRegex = new RegExp(/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)?/gi);
+
+  if (!req.body.url.match(urlRegex)) {
+    res.json({ error: 'Invalid URL' })
+    return
+  }
+
+
   const bdQuery = await ShortUrlModel.findOne({ original_url: req.body.url })
 
   if (bdQuery == null) {
